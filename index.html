@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Systems for Mission | Practical Operational Systems for Growing Teams</title>
+  <meta name="description" content="Systems for Mission builds practical operational systems for nonprofits, foundations, mission-driven organizations, and growing teams, creating more clarity, consistency, and capacity for the work that matters.">
+  <meta name="theme-color" content="#FEFBF6">
+
+  <!-- Set og:url and an absolute og:image when the production domain and social image are ready. -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Systems for Mission">
+  <meta property="og:title" content="Systems for Mission | Practical Operational Systems for Growing Teams">
+  <meta property="og:description" content="Practical operational systems for nonprofits, foundations, mission-driven organizations, and growing teams. More clarity, consistency, and capacity for the work that matters.">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Brand favicon -->
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Source+Serif+4:opsz,wght@8..60,400&display=swap">
+  <link rel="stylesheet" href="styles.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-file-search" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"/><path d="M14 2v5a1 1 0 0 0 1 1h5"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="M13.3 16.3 15 18"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+    <symbol id="i-archive-x" viewBox="0 0 24 24"><rect width="20" height="5" x="2" y="3" rx="1"/><path d="M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"/><path d="m9.5 17 5-5"/><path d="m9.5 12 5 5"/></symbol>
+    <symbol id="i-user-round-cog" viewBox="0 0 24 24"><path d="m14.305 19.53.923-.382"/><path d="m15.228 16.852-.923-.383"/><path d="m16.852 15.228-.383-.923"/><path d="m16.852 20.772-.383.924"/><path d="m19.148 15.228.383-.923"/><path d="m19.53 21.696-.382-.924"/><path d="M2 21a8 8 0 0 1 10.434-7.62"/><path d="m20.772 16.852.924-.383"/><path d="m20.772 19.148.924.383"/><circle cx="10" cy="8" r="5"/><circle cx="18" cy="18" r="3"/></symbol>
+    <symbol id="i-battery-low" viewBox="0 0 24 24"><path d="M22 14v-4"/><path d="M6 14v-4"/><rect x="2" y="6" width="16" height="12" rx="2"/></symbol>
+    <symbol id="i-hand-coins" viewBox="0 0 24 24"><path d="M11 15h2a2 2 0 1 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 17"/><path d="m7 21 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a2 2 0 0 0-2.750-2.910l-4.2 3.9"/><path d="m2 16 6 6"/><circle cx="16" cy="9" r="2.9"/><circle cx="6" cy="5" r="3"/></symbol>
+    <symbol id="i-table-2" viewBox="0 0 24 24"><path d="M3 9h18"/><path d="M9 3v18"/><rect x="3" y="3" width="18" height="18" rx="2"/></symbol>
+    <symbol id="i-calendar-sync" viewBox="0 0 24 24"><path d="M11 10v4h4"/><path d="m11 14 1.535-1.605a5 5 0 018 1.5"/><path d="M16 2v3"/><path d="m21 18-1.535 1.605a5 5 0 01-8-1.5"/><path d="M21 22v-4h-4"/><path d="M21 8.517V5a2 2 0 00-2-2H5a2 2 0 00-2 2v14a2 2 0 002 2h3.517"/><path d="M3 9h4"/><path d="M8 2v3"/></symbol>
+    <symbol id="i-clipboard-list" viewBox="0 0 24 24"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></symbol>
+    <symbol id="i-folder-tree" viewBox="0 0 24 24"><path d="M20 10a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2.5a1 1 0 0 1-.8-.4l-.9-1.2A1 1 0 0 0 15 3h-2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z"/><path d="M20 21a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2.9a1 1 0 0 1-.88-.55l-.42-.85a1 1 0 0 0-.92-.6H13a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z"/><path d="M3 5a2 2 0 0 0 2 2h3"/><path d="M3 3v13a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-layout-template" viewBox="0 0 24 24"><rect width="18" height="7" x="3" y="3" rx="1"/><rect width="9" height="7" x="3" y="14" rx="1"/><rect width="5" height="7" x="16" y="14" rx="1"/></symbol>
+    <symbol id="i-messages-square" viewBox="0 0 24 24"><path d="M16 10a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 14.286V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/><path d="M20 9a2 2 0 0 1 2 2v10.286a.71.71 0 0 1-1.212.502l-2.202-2.202A2 2 0 0 0 17.172 19H10a2 2 0 0 1-2-2v-1"/></symbol>
+    <symbol id="i-scan-search" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="12" r="3"/><path d="m16 16-1.9-1.9"/></symbol>
+    <symbol id="i-list-ordered" viewBox="0 0 24 24"><path d="M11 5h10"/><path d="M11 12h10"/><path d="M11 19h10"/><path d="M4 4h1v5"/><path d="M4 9h2"/><path d="M6.5 20H3.4c0-1 2.6-1.925 2.6-3.5a1.5 1.5 0 0 0-2.6-1.020"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="m15 12-9.373 9.373a1 1 0 0 1-3.001-3L12 9"/><path d="m18 15 4-4"/><path d="m21.5 11.5-1.914-1.914A2 2 0 0 1 19 8.172v-.344a2 2 0 0 0-.586-1.414l-1.657-1.657A6 6 0 0 0 12.516 3H9l1.243 1.243A6 6 0 0 1 12 8.485V10l2 2h1.172a2 2 0 0 1 1.414.586L18.5 14.5"/></symbol>
+    <symbol id="i-handshake" viewBox="0 0 24 24"><path d="m11 17 2 2a1 1 0 1 0 3-3"/><path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.880-3.880a3 3 0 0 0-4.240 0l-.880.880a1 1 0 1 1-3-3l2.810-2.810a5.790 5.790 0 0 1 7.060-.870l.470.280a2 2 0 0 0 1.420.250L21 4"/><path d="m21 3 1 11h-2"/><path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3"/><path d="M3 4h8"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></symbol>
+    <symbol id="i-app-window" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M10 4v4"/><path d="M2 8h20"/><path d="M6 4v4"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  </svg>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header" id="top">
+    <div class="container header-inner">
+      <a class="wordmark" href="#top" aria-label="Systems for Mission, back to top">Systems for Mission</a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main">
+        <ul class="nav-list">
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#examples">Examples</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a class="btn btn-primary nav-cta-mobile" data-booking-link href="https://calendar.app.google/jnBJVvNXCExCcWvy8" target="_blank" rel="noopener noreferrer">Book a Systems Call<span class="visually-hidden"> (opens in a new tab)</span></a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="btn btn-primary btn-sm header-cta" data-booking-link href="https://calendar.app.google/jnBJVvNXCExCcWvy8" target="_blank" rel="noopener noreferrer">Book a Systems Call<span class="visually-hidden"> (opens in a new tab)</span></a>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+          <svg class="icon icon-ui icon-open" aria-hidden="true"><use href="#i-menu"/></svg>
+          <svg class="icon icon-ui icon-close" aria-hidden="true"><use href="#i-x"/></svg>
+          <span class="visually-hidden">Menu</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+    <!-- HERO: open editorial two-column -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="label">Stronger systems. Brighter impact.</p>
+          <h1 class="hero-title" id="hero-title">
+            <span>Better systems.</span>
+            <span>More capacity</span>
+            <span>for your mission.</span>
+          </h1>
+          <p class="hero-lead">I organize and streamline recurring administrative work, build practical operational systems, centralize information, and create reliable processes teams can actually maintain.</p>
+          <div class="btn-row">
+            <a class="btn btn-primary" data-booking-link href="https://calendar.app.google/jnBJVvNXCExCcWvy8" target="_blank" rel="noopener noreferrer">Book a Systems Call<span class="visually-hidden"> (opens in a new tab)</span></a>
+            <a class="btn btn-secondary" href="#how-it-works">See How It Works</a>
+          </div>
+        </div>
+        <div class="hero-media">
+          <img src="assets/hero-systems-for-mission.webp" width="1600" height="1067" fetchpriority="high" decoding="async"
+               alt="A laptop on a bright desk showing an organized Project Hub, with folders for Grants, Programs, Operations, Communications, Reports, and Templates.">
+        </div>
+      </div>
+    </section>
+
+    <!-- ORGANIZATIONS: minimal credibility strip -->
+    <section class="orgs" aria-labelledby="orgs-title">
+      <div class="container orgs-grid">
+        <div class="orgs-copy">
+          <h2 class="orgs-title" id="orgs-title">Organizations I’ve Worked With</h2>
+          <p>Selected organizations I’ve supported across operations, grants, communications, programs, and systems.</p>
+        </div>
+        <ul class="logo-list">
+          <li class="logo-item">
+            <img src="assets/logo-cti.webp" width="240" height="240" loading="lazy" decoding="async" alt="">
+            <span>Care Through Touch Institute</span>
+          </li>
+          <li class="logo-item">
+            <img src="assets/logo-buddhist-center.webp" width="240" height="240" loading="lazy" decoding="async" alt="">
+            <span>Buddhist Center of Steamboat Springs</span>
+          </li>
+          <li class="logo-item">
+            <img src="assets/logo-jewish-solar-challenge.webp" width="240" height="240" loading="lazy" decoding="async" alt="">
+            <span>Jewish Solar Challenge</span>
+          </li>
+          <li class="logo-item">
+            <img src="assets/logo-freedom-farm-sanctuary.webp" width="240" height="240" loading="lazy" decoding="async" alt="">
+            <span>Freedom Farm Sanctuary</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- PAIN POINTS: compact, cohesive grid -->
+    <section class="section section-sand" aria-labelledby="pain-title">
+      <div class="container">
+        <div class="pain-grid">
+          <header class="pain-intro">
+            <p class="label">Familiar challenges. Real impact.</p>
+            <h2 class="section-title" id="pain-title">When Your Systems Stop Keeping Up</h2>
+          </header>
+
+          <article class="card pain-card">
+            <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-file-search"/></svg></span>
+            <h3 class="card-title">Important information takes too long to find</h3>
+            <p>When information is spread across inboxes, spreadsheets, folders, and individual team members, valuable time gets spent searching and asking instead of moving work forward.</p>
+          </article>
+
+          <article class="card pain-card">
+            <span class="icon-box icon-box-warm"><svg class="icon" aria-hidden="true"><use href="#i-copy"/></svg></span>
+            <h3 class="card-title">Work gets duplicated</h3>
+            <p>Without clear systems and ownership, the same information gets recreated, updated in multiple places, or handled twice. That wastes time and limited organizational resources.</p>
+          </article>
+
+          <article class="card pain-card">
+            <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-archive-x"/></svg></span>
+            <h3 class="card-title">Useful knowledge gets lost</h3>
+            <p>Important documents, past work, data, and organizational knowledge can disappear inside cluttered systems, making teams recreate work or miss information that could have supported better decisions.</p>
+          </article>
+
+          <article class="card pain-card">
+            <span class="icon-box icon-box-warm"><svg class="icon" aria-hidden="true"><use href="#i-user-round-cog"/></svg></span>
+            <h3 class="card-title">Processes depend too heavily on individual people</h3>
+            <p>When recurring work isn’t documented or centralized, handoffs become harder, continuity suffers, and teams carry more administrative knowledge in their heads than they should.</p>
+          </article>
+
+          <article class="card pain-card">
+            <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-battery-low"/></svg></span>
+            <h3 class="card-title">Administrative friction drains capacity</h3>
+            <p>Small inefficiencies add up. Repetitive tasks, unclear workflows, and constant information retrieval can contribute to burnout and take attention away from programs, fundraising, planning, growth, and the mission itself.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES: interactive file folders -->
+    <section class="section services" aria-labelledby="services-title">
+      <div class="container">
+        <div class="folders">
+          <header class="folders-intro">
+            <p class="label">Different organizations. Different needs. The same goal: systems that work.</p>
+            <h2 class="section-title" id="services-title">What the Makeover Can Include</h2>
+            <p class="intro">No two organizations operate exactly the same way. I tailor each project to your team, your tools, and the recurring work that takes up the most capacity.</p>
+          </header>
+
+          <ul class="folder-list" role="list">
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-folder-tree"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-1">
+                    <span>Drive, Files &amp; Organizational Knowledge</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-1"><div><p>A complete reorganization of your Drive or file-management system, including clearer folder structures, naming conventions, filing systems, and master documents.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-table-2"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-2">
+                    <span>Trackers &amp; Information Systems</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-2"><div><p>Clear, centralized trackers for programs, contacts, projects, outreach, data, deadlines, and other information your team needs to manage consistently.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-calendar-sync"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-3">
+                    <span>Calendars &amp; Recurring Work</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-3"><div><p>Practical systems for recurring responsibilities, deadlines, scheduling, reminders, and planning ahead.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-clipboard-list"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-4">
+                    <span>SOPs &amp; Documentation</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-4"><div><p>Straightforward guides, checklists, and documentation that make recurring processes easier to follow, share, and hand off.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-app-window"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-5">
+                    <span>Website Structure &amp; Content</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-5"><div><p>Reorganizing website pages, updating copy and information, improving navigation, and implementing changes on platforms such as Wix and Squarespace.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-hand-coins"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-6">
+                    <span>Grants &amp; Grantmaking</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-6"><div><p>Systems for both sides of the funding process, from managing opportunities, applications, deadlines, and reporting to organizing applicants, grantees, reviews, decisions, and award tracking.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-layout-template"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-7">
+                    <span>Templates &amp; Efficiency Tools</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-7"><div><p>Reusable templates, master documents, agreements, email language, and other tools that reduce repetitive work and make processes more consistent.</p></div></div>
+              </div>
+            </div>
+          </li>
+          <li class="folder">
+            <span class="folder-tab" aria-hidden="true"></span>
+            <span class="folder-paper" aria-hidden="true"></span>
+            <div class="folder-front">
+              <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-messages-square"/></svg></span>
+              <div class="folder-content">
+                <h3 class="folder-title">
+                  <button class="folder-toggle" type="button" aria-expanded="false" aria-controls="svc-8">
+                    <span>Reporting &amp; Communication Workflows</span>
+                    <svg class="icon icon-plus" aria-hidden="true"><use href="#i-plus"/></svg>
+                  </button>
+                </h3>
+                <div class="folder-desc" id="svc-8"><div><p>Simple systems for collecting information, preparing updates, tracking progress, and supporting recurring internal or external communications.</p></div></div>
+              </div>
+            </div>
+          </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS: Pine section with a process flow -->
+    <section class="section how" id="how-it-works" aria-labelledby="how-title">
+      <div class="container">
+        <header class="how-head">
+          <p class="label label-on-dark">A simple, collaborative process.</p>
+          <h2 class="section-title" id="how-title">How It Works</h2>
+        </header>
+        <ol class="steps">
+          <li class="step">
+            <span class="step-node" aria-hidden="true"></span>
+            <div class="step-head">
+              <span class="step-num" aria-hidden="true">1</span>
+              <svg class="icon icon-step" aria-hidden="true"><use href="#i-scan-search"/></svg>
+            </div>
+            <h3 class="card-title"><span class="visually-hidden">Step 1: </span>Assess</h3>
+            <p>We look at your current systems, recurring work, and where friction is showing up.</p>
+          </li>
+          <li class="step">
+            <span class="step-node" aria-hidden="true"></span>
+            <div class="step-head">
+              <span class="step-num" aria-hidden="true">2</span>
+              <svg class="icon icon-step" aria-hidden="true"><use href="#i-list-ordered"/></svg>
+            </div>
+            <h3 class="card-title"><span class="visually-hidden">Step 2: </span>Prioritize</h3>
+            <p>Together, we identify the systems that would create the most clarity and capacity.</p>
+          </li>
+          <li class="step">
+            <span class="step-node" aria-hidden="true"></span>
+            <div class="step-head">
+              <span class="step-num" aria-hidden="true">3</span>
+              <svg class="icon icon-step" aria-hidden="true"><use href="#i-hammer"/></svg>
+            </div>
+            <h3 class="card-title"><span class="visually-hidden">Step 3: </span>Build</h3>
+            <p>I design and build the agreed tools, workflows, documentation, and structure.</p>
+          </li>
+          <li class="step">
+            <span class="step-node" aria-hidden="true"></span>
+            <div class="step-head">
+              <span class="step-num" aria-hidden="true">4</span>
+              <svg class="icon icon-step" aria-hidden="true"><use href="#i-handshake"/></svg>
+            </div>
+            <h3 class="card-title"><span class="visually-hidden">Step 4: </span>Handoff</h3>
+            <p>We test the systems together, make adjustments, and make sure your team knows how to maintain them.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- PRICING: apricot-tinted editorial -->
+    <section class="section pricing" aria-labelledby="pricing-title">
+      <div class="container pricing-grid">
+        <h2 class="section-title pricing-title" id="pricing-title"><span class="nowrap">Project-Based</span> Pricing</h2>
+        <div class="pricing-body">
+          <p class="pricing-lead">Every Systems for Mission project is scoped around your organization’s priorities, existing tools, and the systems that will create the most value.</p>
+          <p>After an introductory call, I’ll recommend a focused project scope, timeline, and fixed project fee.</p>
+          <p>Most projects are designed to be completed within <strong>4–6 weeks</strong>.</p>
+          <a class="btn btn-primary" data-booking-link href="https://calendar.app.google/jnBJVvNXCExCcWvy8" target="_blank" rel="noopener noreferrer">Book a Systems Call<span class="visually-hidden"> (opens in a new tab)</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXAMPLES: complete, locally rendered HTML systems -->
+    <section class="section" id="examples" aria-labelledby="examples-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="label">Real organizations. Real results.</p>
+          <h2 class="section-title" id="examples-title">Examples of Work</h2>
+        </header>
+
+        <div class="cases">
+          <article class="case">
+            <div class="case-file">
+              <p class="case-tab">Care Through Touch Institute</p>
+              <div class="case-media system-preview" data-system="assets/grant-pipeline.html">
+                <div class="system-overview" aria-hidden="true">
+                  <iframe src="assets/grant-pipeline.html" title="Grant Management System overview" loading="lazy" tabindex="-1" inert></iframe>
+                  <p class="preview-fallback">Open the full preview to explore this system.</p>
+                </div>
+                <a class="preview-open" href="assets/grant-pipeline.html" data-preview data-title="Grant Management System">View system <span aria-hidden="true">↗</span><span class="visually-hidden">: Grant Management System</span></a>
+              </div>
+            </div>
+            <div class="case-copy">
+              <h3 class="case-title">Grant Management System</h3>
+              <p>Built a centralized grant pipeline, deadline calendar, funder organization system, and application workflow to make opportunities easier to evaluate, plan, and manage.</p>
+              <a class="text-link case-link" href="assets/grant-pipeline.html" data-preview data-title="Grant Management System">Open full preview<span class="visually-hidden">: Grant Management System</span></a>
+            </div>
+          </article>
+
+          <article class="case case-flip">
+            <div class="case-file">
+              <p class="case-tab">Buddhist Center of Steamboat Springs</p>
+              <div class="case-media system-preview" data-system="assets/operations-tracker.html">
+                <div class="system-overview" aria-hidden="true">
+                  <iframe src="assets/operations-tracker.html" title="Operations System overview" loading="lazy" tabindex="-1" inert></iframe>
+                  <p class="preview-fallback">Open the full preview to explore this system.</p>
+                </div>
+                <a class="preview-open" href="assets/operations-tracker.html" data-preview data-title="Operations System">View system <span aria-hidden="true">↗</span><span class="visually-hidden">: Operations System</span></a>
+              </div>
+            </div>
+            <div class="case-copy">
+              <h3 class="case-title">Operations System</h3>
+              <p>Centralized programming, scheduling, communications, volunteer coordination, and recurring administrative workflows to create greater consistency and reduce administrative load.</p>
+              <a class="text-link case-link" href="assets/operations-tracker.html" data-preview data-title="Operations System">Open full preview<span class="visually-hidden">: Operations System</span></a>
+            </div>
+          </article>
+
+          <article class="case">
+            <div class="case-file">
+              <p class="case-tab">Jewish Solar Challenge</p>
+              <div class="case-media site-preview">
+                <div class="site-bar" aria-hidden="true">
+                  <span class="site-dots"><i></i><i></i><i></i></span>
+                  <span class="site-url">jewishsolarchallenge.com</span>
+                </div>
+                <div class="site-frame">
+                  <iframe src="https://www.jewishsolarchallenge.com/"
+                          title="Jewish Solar Challenge Website — live, scrollable homepage"
+                          loading="lazy"></iframe>
+                </div>
+              </div>
+            </div>
+            <div class="case-copy">
+              <h3 class="case-title">Website Structure &amp; Content</h3>
+              <p>Reorganized the website structure, updated page content and organizational information, clarified navigation, and implemented the revised content to make the site easier to understand and maintain.</p>
+              <a class="text-link case-link" href="https://www.jewishsolarchallenge.com/" target="_blank" rel="noopener">View live website <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIAL: lavender editorial block -->
+    <section class="section testimonials-section" aria-labelledby="testimonials-title">
+      <div class="container">
+        <header class="section-head">
+          <p class="label">From people I’ve worked with</p>
+          <h2 class="section-title" id="testimonials-title">What It’s Like to Work Together</h2>
+        </header>
+
+        <div class="testimonials">
+          <!-- Additional approved testimonials can be added as subsequent figures. -->
+          <figure class="quote quote-card">
+            <blockquote>
+              <p>“Tali is remarkably efficient and organized, with a real gift for seeing what needs to be done and building systems that make work run more smoothly. She also has a strong eye for graphics and web design, bringing clarity and thoughtful systems thinking to every project.”</p>
+            </blockquote>
+            <figcaption><strong>Marchele McCarthy</strong><span>BCSS President</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO IT'S FOR -->
+    <section class="section" aria-labelledby="audience-title">
+      <div class="container audience-grid">
+        <div class="audience-intro">
+          <h2 class="section-title" id="audience-title">Built for Small, Growing Teams</h2>
+          <p class="intro">Systems for Mission is designed for nonprofits, foundations, mission-driven organizations, and other small teams that need stronger systems to support the next stage of their work.</p>
+          <ul class="tags" aria-label="Who this is for">
+            <li>Small teams</li>
+            <li>Mission-driven</li>
+            <li>Growing organizations</li>
+            <li>Nonprofits &amp; foundations</li>
+            <li>Teams in transition</li>
+          </ul>
+        </div>
+        <div class="audience-list">
+          <p class="audience-list-title">That might mean:</p>
+          <ul class="check-list">
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>your organization has grown beyond the systems it started with</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>you’re preparing to hire or onboard new team members</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>responsibilities are shifting between staff</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>you’re entering a period of growth or transition</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>important processes need to be documented before knowledge gets lost</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>your team needs more capacity without adding unnecessary complexity</li>
+            <li><svg class="icon icon-check" aria-hidden="true"><use href="#i-check"/></svg>you want to streamline operations before expanding</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="section section-cream" id="about" aria-labelledby="about-title">
+      <div class="container about-grid">
+        <div class="about-photo">
+          <img src="assets/tali-working-profile.png" width="6467" height="4314" loading="lazy" decoding="async"
+               alt="Tali smiling while working at a laptop.">
+        </div>
+        <div class="about-copy">
+          <h2 class="section-title" id="about-title">About Tali</h2>
+          <p class="about-lead">I bring more than 10 years of experience across nonprofit and mission-driven work, spanning operations, grants, communications, programs, and administration.</p>
+          <p>Throughout those roles, I’ve focused on creating clearer systems that reduce friction and make important work easier to manage.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section class="final-cta" id="contact" aria-labelledby="cta-title">
+      <div class="container final-cta-inner">
+        <h2 class="final-title" id="cta-title">Ready to create more room for the work that matters?</h2>
+        <p class="final-lead">Let’s talk about where stronger systems could create more capacity for your team.</p>
+        <div class="btn-row btn-row-center">
+          <a class="btn btn-primary" data-booking-link href="https://calendar.app.google/jnBJVvNXCExCcWvy8" target="_blank" rel="noopener noreferrer">Book a Systems Call<span class="visually-hidden"> (opens in a new tab)</span></a>
+          <a class="text-link" href="mailto:tali@systemsformission.com">Questions? Get in touch.</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="preview-dialog" aria-labelledby="preview-title" aria-describedby="preview-help">
+    <div class="preview-toolbar">
+      <h2 id="preview-title">System preview</h2>
+      <button class="preview-close" type="button" autofocus><svg class="icon icon-ui" aria-hidden="true"><use href="#i-x"/></svg><span>Close</span></button>
+      <p id="preview-help">Scroll to explore the full system, or fit the entire sheet in view.</p>
+      <div class="preview-controls">
+        <button class="btn btn-secondary preview-fit" type="button" aria-pressed="false">Fit entire sheet</button>
+        <a class="text-link preview-direct" href="assets/grant-pipeline.html" target="_blank" rel="noopener">Open in new tab <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <div class="preview-viewport"><iframe title="Full system preview"></iframe></div>
+  </dialog>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a class="wordmark wordmark-light" href="#top">Systems for Mission</a>
+      <nav aria-label="Footer">
+        <ul class="footer-nav">
+          <li><a href="#how-it-works">How It Works</a></li>
+          <li><a href="#examples">Examples</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="mailto:tali@systemsformission.com">tali@systemsformission.com</a></li>
+        </ul>
+      </nav>
+      <p class="footer-legal">© <span data-year>2026</span> Systems for Mission</p>
+    </div>
+  </footer>
+</body>
+</html>
