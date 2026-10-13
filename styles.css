@@ -5,23 +5,32 @@
 
 /* ---------- 1. Tokens ---------- */
 :root {
-  /* Brand palette (exact) */
+  /* Primary anchors */
   --ink: #1B1B1B;
   --pine: #1F3A2E;
-  --tangerine: #F36F2D;
+  --frost-blue: #16488F;
+
+  /* Secondary colors */
   --lavender: #C9B4E8;
   --citron: #B7C646;
-  --apricot: #F7B38B;
+  --polar: #C6D8EA;
+
+  /* Neutrals */
   --taupe: #D9C8BB;
   --warm-cream: #F9F4EC;
   --ivory: #FEFBF6;
 
-  /* Tints mixed from the palette with Ivory */
+  /* Pale surfaces and tints */
   --lavender-tint: #ECE3F5;
-  --apricot-tint: #FCE6D7;
-  --sand: #EFE7DF;          /* Taupe softened, for section backgrounds */
-  --manila-back: #E6DAD0;   /* Taupe, folder back panel and tabs */
-  --manila-front: #F2EBE4;  /* Taupe, folder front panel */
+  --citron-tint: #E7EDC2;
+  --polar-tint: #EAF1F8;
+  --sand: #EFE7DF;
+  --manila: #E6DAD0;
+
+  /* Primary call to action: Citron with Ink text (9.2:1) */
+  --cta: var(--citron);
+  --cta-hover: #C4D25E;
+  --cta-active: #A6B53A;
 
   /* Text */
   --text: var(--ink);
@@ -71,6 +80,7 @@
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --t-fast: 160ms;
   --t-mid: 220ms;
+  --t-reveal: 420ms;   /* calmer reveals for cards and folders */
 
   --header-h: 72px;
 }
@@ -136,7 +146,7 @@ strong { font-weight: 600; }
 
 /* Focus: always visible, outline plus offset, never color alone */
 :focus-visible {
-  outline: 3px solid var(--ink);
+  outline: 3px solid var(--frost-blue);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -160,27 +170,23 @@ strong { font-weight: 600; }
 
 /* ---------- 3. Type ---------- */
 .label {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 10px;
+  display: inline-block;
+  max-width: 100%;
   margin-bottom: var(--s-3);
-  font-size: var(--fs-label);
+  padding: 6px 12px 5px;
+  border-radius: 8px;
+  background: var(--lavender-tint);
+  color: var(--ink);
+  font-size: 0.84rem;
   font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: 0.12em;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-wrap: balance;
 }
-.label::before {
-  content: "";
-  flex: none;
-  width: 8px;
-  height: 8px;
-  border-radius: 2px;
-  background: var(--citron);
-  transform: translateY(-1px);
-}
-.label-on-dark { color: var(--warm-cream); }
-.label-on-dark::before { background: var(--lavender); }
+/* Same eyebrow on darker or lavender backgrounds: only the fill changes */
+.label-on-dark { background: var(--lavender); color: var(--ink); }
+.testimonials-section .label { background: var(--ivory); }
 
 .section-title {
   font-family: var(--font-display);
@@ -231,7 +237,7 @@ strong { font-weight: 600; }
   color: var(--pine);
   transition: background-color var(--t-mid) ease;
 }
-.icon-box-warm { background: var(--apricot-tint); }
+.icon-box-warm { background: var(--polar-tint); }
 
 /* ---------- 5. Buttons ---------- */
 .btn {
@@ -259,19 +265,19 @@ strong { font-weight: 600; }
 .btn-sm { min-height: 50px; padding: 0 18px; font-size: 0.9375rem; }
 
 .btn-primary {
-  background: var(--tangerine);
-  border-color: var(--tangerine);
+  background: var(--cta);
+  border-color: var(--cta);
   color: var(--ink);
 }
 .btn-primary:hover {
-  background: #F68A52;
-  border-color: #F68A52;
-  box-shadow: 0 10px 20px -12px rgba(243, 111, 45, 0.9);
+  background: var(--cta-hover);
+  border-color: var(--cta-hover);
+  box-shadow: 0 0 0 4px rgba(183, 198, 70, 0.28), 0 12px 22px -12px rgba(31, 58, 46, 0.55);
   translate: 0 -1px;
 }
 .btn-primary:active {
-  background: #E8662A;
-  border-color: #E8662A;
+  background: var(--cta-active);
+  border-color: var(--cta-active);
   box-shadow: none;
   translate: 0 0;
 }
@@ -293,6 +299,7 @@ strong { font-weight: 600; }
 
 .text-link {
   gap: 0.35em;
+  color: var(--frost-blue);
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -507,13 +514,22 @@ strong { font-weight: 600; }
   gap: var(--s-5) var(--s-4);
 }
 
-.logo-item {
+.logo-item { display: flex; justify-content: center; }
+/* The whole logo + name block is one link */
+.logo-link {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--s-2);
+  min-width: 44px;
+  padding: var(--s-2) var(--s-1);
+  border-radius: var(--r-card);
   text-align: center;
+  text-decoration: none;
+  transition: background-color var(--t-mid) ease, translate var(--t-mid) var(--ease);
 }
+.logo-link:hover { background: var(--polar-tint); translate: 0 -2px; }
+.logo-link:hover span { color: var(--frost-blue); }
 /* All four marks are round badges, so one diameter balances them.
    Shown in their original colors, with one consistent thin frame. */
 .logo-item img {
@@ -524,11 +540,12 @@ strong { font-weight: 600; }
   box-shadow: 0 0 0 1px var(--line), 0 6px 14px -10px rgba(27, 27, 27, 0.35);
   transition: translate var(--t-mid) var(--ease), box-shadow var(--t-mid) ease;
 }
-.logo-item:hover img {
+.logo-link:hover img {
   translate: 0 -2px;
   box-shadow: 0 0 0 1px var(--line-strong), 0 10px 18px -10px rgba(27, 27, 27, 0.4);
 }
 .logo-item span {
+  transition: color var(--t-mid) ease;
   max-width: 15ch;
   font-size: 0.8125rem;
   font-weight: 500;
@@ -576,17 +593,41 @@ strong { font-weight: 600; }
     border-color var(--t-mid) ease;
 }
 .pain-card p { color: var(--text-secondary); font-size: 0.98rem; }
-.pain-card:hover {
+.pain-card:hover,
+.pain-card:focus-visible {
   translate: 0 -3px;
   border-color: var(--line-strong);
   box-shadow: var(--shadow-soft);
+}
+.pain-card:focus-visible { outline-offset: 4px; }
+.pain-desc { display: grid; grid-template-rows: 1fr; }
+.pain-desc > div { overflow: hidden; }
+/* With JS, descriptions start collapsed. They stay readable by screen readers
+   (no display:none), and open on hover/focus (desktop) or in the reading zone (touch). */
+.enhanced .pain-desc {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows var(--t-reveal) var(--ease), opacity var(--t-reveal) ease;
+}
+.enhanced .pain-card.is-open .pain-desc { grid-template-rows: 1fr; opacity: 1; }
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .enhanced .pain-card:hover .pain-desc,
+  .enhanced .pain-card:focus-within .pain-desc { grid-template-rows: 1fr; opacity: 1; }
+  /* Every card reserves the tallest open height (set by script.js), so nothing below moves.
+     Icon and title sit centered at rest, then glide up as the description opens. */
+  .enhanced .pain-card { min-height: var(--pain-h, auto); justify-content: center; }
+  .pain-grid.is-measuring .pain-card { justify-content: flex-start; }
+  .pain-grid.is-measuring .pain-desc { grid-template-rows: 1fr; transition: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enhanced .pain-desc { grid-template-rows: 1fr; opacity: 1; }
 }
 
 @media (min-width: 640px) {
   .pain-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-auto-rows: 1fr;
     gap: var(--s-4);
+    align-items: start;
   }
   .pain-intro { padding: var(--s-2) var(--s-4) 0 0; }
 }
@@ -598,13 +639,11 @@ strong { font-weight: 600; }
 .folders { display: grid; gap: var(--s-6); }
 .folder-list { display: grid; gap: var(--s-2); }
 
-.folder:nth-of-type(3n + 2) { --tab: 1; }
-.folder:nth-of-type(3n) { --tab: 2; }
 .folder {
   position: relative;
   isolation: isolate;
   padding-top: 46px;
-  transition: translate var(--t-mid) var(--ease);
+  transition: translate var(--t-reveal) var(--ease);
 }
 
 /* Back panel */
@@ -614,10 +653,10 @@ strong { font-weight: 600; }
   z-index: -2;
   inset: 16px 0 0 0;
   border-radius: 14px;
-  background: var(--manila-back);
+  background: var(--manila);
 }
 
-/* Tab: real folders stagger their tabs, so each card's tab sits in one of three positions */
+/* Tab: all tabs sit on the left for a clean, consistent grid */
 .folder-tab {
   position: absolute;
   z-index: -2;
@@ -626,9 +665,8 @@ strong { font-weight: 600; }
   width: 36%;
   height: 28px;
   border-radius: 12px 12px 0 0;
-  background: var(--manila-back);
-  transform: translateX(calc(var(--tab, 0) * 85%));
-  transition: background-color var(--t-mid) ease;
+  background: var(--manila);
+  transition: background-color var(--t-reveal) ease;
 }
 
 /* The sheet of paper peeking out of the folder */
@@ -644,7 +682,7 @@ strong { font-weight: 600; }
   background:
     repeating-linear-gradient(to bottom, rgba(27, 27, 27, 0.10) 0 2px, transparent 2px 8px) 16px 8px / 48% 10px no-repeat,
     var(--ivory);
-  transition: translate var(--t-mid) var(--ease);
+  transition: translate var(--t-reveal) var(--ease);
 }
 
 /* Front panel */
@@ -655,9 +693,9 @@ strong { font-weight: 600; }
   gap: var(--s-3);
   padding: 20px;
   border-radius: 6px 6px 14px 14px;
-  background: var(--manila-front);
+  background: var(--sand);
   box-shadow: 0 -1px 0 rgba(27, 27, 27, 0.05), 0 -6px 12px -10px rgba(27, 27, 27, 0.25);
-  transition: box-shadow var(--t-mid) ease;
+  transition: box-shadow var(--t-reveal) ease, background-color var(--t-reveal) ease;
 }
 
 .folder-title {
@@ -698,16 +736,6 @@ strong { font-weight: 600; }
   outline-offset: 3px;
 }
 
-.icon-plus {
-  width: 30px;
-  height: 30px;
-  padding: 6px;
-  margin-top: -3px;
-  border: 1.5px solid var(--line-strong);
-  border-radius: 50%;
-  stroke-width: 2;
-  transition: transform var(--t-mid) var(--ease), background-color var(--t-mid) ease, border-color var(--t-mid) ease;
-}
 
 .folder-desc {
   display: grid;
@@ -725,13 +753,13 @@ strong { font-weight: 600; }
 .enhanced .folder-desc {
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows var(--t-mid) var(--ease), opacity var(--t-mid) ease;
+  transition: grid-template-rows var(--t-reveal) var(--ease), opacity var(--t-reveal) ease;
 }
 
 /* Open state: tapped / clicked / toggled by keyboard */
 .folder.is-open .folder-desc { grid-template-rows: 1fr; opacity: 1; }
-.folder.is-open .icon-plus { transform: rotate(45deg); background: var(--ivory); border-color: var(--ink); }
 .folder.is-open .folder-tab { background: var(--lavender); }
+.folder.is-open .folder-front { background: var(--warm-cream); }
 .folder.is-open .folder-paper { translate: 0 -10px; }
 
 /* Desktop with a mouse: hover and focus reveal too, and the card lifts */
@@ -744,8 +772,6 @@ strong { font-weight: 600; }
   .folder:focus-within .folder-paper { translate: 0 -10px; }
   .folder:hover .folder-front,
   .folder:focus-within .folder-front { box-shadow: 0 -1px 0 rgba(27, 27, 27, 0.05), var(--shadow-lift); }
-  .folder:hover .icon-plus,
-  .folder:focus-within .icon-plus { background: var(--ivory); border-color: var(--ink); }
 }
 
 /* Phones and tablets: a compact stacked drawer, icon beside the title */
@@ -767,17 +793,7 @@ strong { font-weight: 600; }
     gap: var(--s-5) var(--s-4);
     align-items: end;
   }
-  .folders-intro {
-    grid-column: 1 / -1;
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    gap: 0 var(--s-7);
-    align-items: end;
-    margin-bottom: var(--s-3);
-  }
-  .folders-intro .label,
-  .folders-intro .section-title { grid-column: 1; }
-  .folders-intro .intro { grid-column: 2; grid-row: 1 / span 2; margin-top: 0; align-self: end; }
+  .folders-intro { grid-column: 1 / -1; margin-bottom: var(--s-3); }
   .folder-list { display: contents; }
   .folder-front { padding: 24px; }
 }
@@ -799,7 +815,7 @@ strong { font-weight: 600; }
     position: absolute;
     top: 22px;
     left: 22px;
-    transition: opacity var(--t-mid) ease, scale var(--t-mid) var(--ease);
+    transition: opacity var(--t-reveal) ease, scale var(--t-reveal) var(--ease);
   }
   .enhanced .folder.is-open .folder-front > .icon-box { opacity: 0; scale: 0.85; }
   .folders.no-anim .folder-desc,
@@ -852,8 +868,27 @@ strong { font-weight: 600; }
   border-radius: 4px;
   border: 2px solid var(--lavender);
   background: var(--lavender);
-  transition: background-color var(--t-mid) ease;
+  transition: background-color 300ms ease;
 }
+/* Timeline draws once when the section enters view (script.js adds .is-pending, then .is-drawn).
+   Text stays readable throughout; only the line, nodes, numbers and a small settle animate. */
+.steps.is-pending::after { transform: scaleY(0); }
+.steps.is-pending .step-node { background: var(--pine); }
+.steps.is-pending .step-num { opacity: 0.4; }
+.steps.is-pending .step-head,
+.steps.is-pending .step .card-title { translate: 0 6px; }
+.steps::after { transition: transform 1200ms cubic-bezier(0.45, 0, 0.25, 1); }
+.step-num { transition: opacity 360ms ease; }
+.step-head,
+.step .card-title { transition: translate 360ms var(--ease); }
+.steps.is-drawn .step-node,
+.steps.is-drawn .step-num,
+.steps.is-drawn .step-head,
+.steps.is-drawn .step .card-title { transition-delay: calc(var(--step) * 300ms + 120ms); }
+.step:nth-child(1) { --step: 0; }
+.step:nth-child(2) { --step: 1; }
+.step:nth-child(3) { --step: 2; }
+.step:nth-child(4) { --step: 3; }
 
 .step-head {
   display: flex;
@@ -891,12 +926,13 @@ strong { font-weight: 600; }
     height: 2px;
   }
   .steps::after { transform-origin: left; }
+  .steps.is-pending::after { transform: scaleX(0); }
   .step { padding: var(--s-6) var(--s-5) 0 0; }
   .step-head { margin-top: 0; }
 }
 
-/* ---------- 13. Pricing (apricot editorial) ---------- */
-.pricing { background: var(--apricot-tint); }
+/* ---------- 13. Pricing (calm polar-tint pause) ---------- */
+.pricing { background: var(--polar-tint); }
 
 .pricing-grid { display: grid; gap: var(--s-4); }
 .pricing-title { font-size: clamp(2.25rem, 1.4rem + 2.6vw, 3.5rem); }
@@ -925,8 +961,7 @@ strong { font-weight: 600; }
     gap: var(--s-7);
     align-items: start;
   }
-  .pricing-title { padding-top: var(--s-3); border-top: 2px solid var(--ink); }
-  .pricing-body { padding-top: var(--s-3); border-top: 1px solid var(--line-strong); }
+  .pricing-body { padding-top: var(--s-6); }
 }
 @media (max-width: 559px) {
   .pricing-body .btn { width: 100%; }
@@ -954,7 +989,7 @@ strong { font-weight: 600; }
   max-width: calc(100% - 48px);
   padding: 10px 20px 8px;
   border-radius: 12px 12px 0 0;
-  background: var(--manila-back);
+  background: var(--manila);
   font-size: var(--fs-small);
   font-weight: 600;
   line-height: 1.35;
@@ -963,7 +998,7 @@ strong { font-weight: 600; }
 .case-media {
   position: relative;
   overflow: hidden;
-  border: 10px solid var(--manila-back);
+  border: 10px solid var(--manila);
   border-radius: 0 var(--r-panel) var(--r-panel) var(--r-panel);
   background: var(--ivory);
   transition: box-shadow var(--t-mid) ease;
@@ -1000,7 +1035,8 @@ strong { font-weight: 600; }
 }
 .site-frame {
   position: relative;
-  min-height: 260px;
+  min-width: 0;
+  /* No min-height here: with aspect-ratio it forced the frame wider than small screens */
   aspect-ratio: 16 / 10;
   overflow: hidden;
   border-radius: 0 0 10px 10px;
@@ -1013,6 +1049,23 @@ strong { font-weight: 600; }
   height: 100%;
   border: 0;
   border-radius: inherit;
+}
+/* script.js renders the site at a 1280px desktop width and scales it down */
+.site-frame.is-scaled iframe {
+  inset: 0 auto auto 0;
+  width: 1280px;
+  height: var(--site-h, 800px);
+  border-radius: 0;
+  transform: scale(var(--site-scale, 1));
+  transform-origin: top left;
+}
+/* On touch screens the preview is view-only, so it never traps page scrolling */
+@media (hover: none), (pointer: coarse) {
+  .site-frame.is-scaled iframe { pointer-events: none; }
+}
+.site-preview .preview-open { margin: 10px; }
+@media (max-width: 559px) {
+  .site-frame { aspect-ratio: 4 / 3; }
 }
 .site-frame iframe:focus-visible { outline-offset: -3px; }
 .case-link { display: inline-block; padding-block: 11px; margin-top: var(--s-1); }
@@ -1090,6 +1143,9 @@ strong { font-weight: 600; }
   transition: translate var(--t-mid) var(--ease), box-shadow var(--t-mid) ease;
 }
 .quote-card + .quote-card { border-top: 1px solid rgba(27, 27, 27, 0.08); }
+@media (hover: hover) and (pointer: fine) {
+  .quote-card:hover { translate: 0 -4px; box-shadow: var(--shadow-lift); }
+}
 
 /* ---------- 16. Who it's for ---------- */
 .audience-grid { display: grid; gap: var(--s-6); align-items: start; }
@@ -1161,16 +1217,13 @@ strong { font-weight: 600; }
   object-fit: cover; border-radius: 14px 18px;
 }
 
-.about-lead {
-  margin-top: var(--s-4);
-  font-family: var(--font-body);
-  font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
-  font-weight: 600;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  max-width: 30em;
+.about-copy p:not(.label) {
+  max-width: 36em;
+  font-size: var(--fs-lead);
+  line-height: 1.6;
 }
-.about-copy p + p { margin-top: var(--s-3); max-width: 36em; }
+.about-lead { margin-top: var(--s-4); font-weight: 500; }
+.about-copy p:not(.label) + p { margin-top: var(--s-3); }
 
 @media (min-width: 900px) {
   .about-grid { grid-template-columns: minmax(0, 3fr) minmax(0, 5fr); gap: var(--s-7); }
@@ -1204,6 +1257,19 @@ strong { font-weight: 600; }
   display: inline-flex;
   align-items: center;
   min-height: 44px;
+  color: var(--ivory);
+}
+.final-title + .btn-row-center { margin-top: var(--s-6); }
+/* Slow ambient ripple around the main button; it rests while hovered or focused */
+@keyframes cta-ripple {
+  0%   { box-shadow: 0 0 0 0 rgba(183, 198, 70, 0.45), 0 0 0 0 rgba(201, 180, 232, 0.35); }
+  60%  { box-shadow: 0 0 0 14px rgba(183, 198, 70, 0), 0 0 0 26px rgba(201, 180, 232, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(183, 198, 70, 0), 0 0 0 0 rgba(201, 180, 232, 0); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .btn-ambient.is-live { animation: cta-ripple 3.2s ease-out 1.2s infinite; }
+  .btn-ambient.is-live:hover,
+  .btn-ambient.is-live:focus-visible { animation: none; }
 }
 
 @media (max-width: 559px) {
@@ -1243,6 +1309,24 @@ strong { font-weight: 600; }
   .enhanced .folder { transition: transform 420ms var(--ease), translate var(--t-mid) var(--ease); }
   .enhanced .folders.is-filing .folder { transform: translateY(10px) rotate(-0.5deg); }
   .enhanced .folders.is-filing .folder:nth-child(even) { transform: translateY(10px) rotate(0.5deg); }
+}
+
+/* Gentle one-time entrance for selected blocks (script.js adds .is-pending, then removes it) */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    transition: opacity 560ms ease, translate 560ms var(--ease);
+    transition-delay: calc(var(--d, 0) * 110ms);
+  }
+  [data-reveal].is-pending { opacity: 0; translate: 0 14px; }
+  /* Elements with their own hover transitions keep them alongside the entrance */
+  .btn[data-reveal] {
+    transition: opacity 560ms ease calc(var(--d, 0) * 110ms), translate 560ms var(--ease) calc(var(--d, 0) * 110ms),
+      background-color var(--t-fast) ease, border-color var(--t-fast) ease, box-shadow var(--t-mid) ease;
+  }
+  .quote-card[data-reveal] {
+    transition: opacity 560ms ease, translate 560ms var(--ease), box-shadow var(--t-mid) ease;
+  }
+  .quote-card[data-reveal]:not(.is-pending):hover { transition-duration: 560ms, var(--t-mid), var(--t-mid); }
 }
 
 /* ---------- 20. Reduced motion ---------- */
