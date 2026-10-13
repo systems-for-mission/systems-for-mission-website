@@ -593,13 +593,16 @@ strong { font-weight: 600; }
     border-color var(--t-mid) ease;
 }
 .pain-card p { color: var(--text-secondary); font-size: 0.98rem; }
-.pain-card:hover,
-.pain-card:focus-visible {
+.pain-card:focus-visible,
+.pain-card.is-open {
   translate: 0 -3px;
   border-color: var(--line-strong);
   box-shadow: var(--shadow-soft);
 }
 .pain-card:focus-visible { outline-offset: 4px; }
+@media (hover: hover) and (pointer: fine) {
+  .pain-card:hover { translate: 0 -3px; border-color: var(--line-strong); box-shadow: var(--shadow-soft); }
+}
 .pain-desc { display: grid; grid-template-rows: 1fr; }
 .pain-desc > div { overflow: hidden; }
 /* With JS, descriptions start collapsed. They stay readable by screen readers
@@ -637,7 +640,7 @@ strong { font-weight: 600; }
 
 /* ---------- 11. Services: file folders ---------- */
 .folders { display: grid; gap: var(--s-6); }
-.folder-list { display: grid; gap: var(--s-2); }
+.folder-list { display: grid; gap: 20px; }
 
 .folder {
   position: relative;
@@ -790,7 +793,7 @@ strong { font-weight: 600; }
 @media (min-width: 1024px) {
   .folders {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--s-5) var(--s-4);
+    gap: 40px var(--s-4);
     align-items: end;
   }
   .folders-intro { grid-column: 1 / -1; margin-bottom: var(--s-3); }
@@ -798,7 +801,7 @@ strong { font-weight: 600; }
   .folder-front { padding: 24px; }
 }
 @media (min-width: 1200px) {
-  .folders { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-5) var(--s-3); }
+  .folders { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 40px var(--s-4); }
   .folder-front { padding: 22px; }
 }
 
@@ -1166,7 +1169,14 @@ strong { font-weight: 600; }
   cursor: default;
   transition: background-color var(--t-mid) ease, translate var(--t-mid) var(--ease);
 }
-.tags li:hover { translate: 0 -2px; background: var(--lavender); }
+@media (hover: hover) and (pointer: fine) {
+  .tags li:hover { translate: 0 -2px; background: var(--lavender); }
+}
+.tags.is-active li { translate: 0 -2px; background: var(--lavender); }
+.tags li:nth-child(2) { transition-delay: 70ms; }
+.tags li:nth-child(3) { transition-delay: 140ms; }
+.tags li:nth-child(4) { transition-delay: 210ms; }
+.tags li:nth-child(5) { transition-delay: 280ms; }
 
 .audience-list {
   padding: clamp(20px, 3vw, 32px);
@@ -1190,8 +1200,12 @@ strong { font-weight: 600; }
 }
 .check-list li:last-child { border-bottom: 0; padding-bottom: 0; }
 .check-list li { transition: translate var(--t-mid) var(--ease); }
-.check-list li:hover { translate: 0 -2px; }
-.check-list li:hover .icon-check { background: var(--lavender); }
+@media (hover: hover) and (pointer: fine) {
+  .check-list li:hover { translate: 0 -2px; }
+  .check-list li:hover .icon-check { background: var(--lavender); }
+}
+.check-list li.is-active { translate: 0 -2px; }
+.check-list li.is-active .icon-check { background: var(--lavender); }
 .icon-check {
   width: 24px;
   height: 24px;

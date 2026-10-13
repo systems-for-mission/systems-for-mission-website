@@ -41,19 +41,42 @@
     setMenu(false);
   });
 
+  // Reading zone: the middle band of the screen. Elements open as they enter it
+  // and close again once scrolled past, in either direction.
+  const canObserve = "IntersectionObserver" in window;
+  const watchZone = (elements, onChange, band = "-30% 0px -30% 0px") => {
+    if (!canObserve) return;
+    const zone = new IntersectionObserver(entries => {
+      entries.forEach(entry => onChange(entry.target, entry.isIntersecting));
+    }, { rootMargin: band, threshold: 0 });
+    elements.forEach(el => zone.observe(el));
+  };
+
   const folders = document.querySelector(".folders");
   const resetFolders = [];
   const closeFolders = [];
+  const zoneFolders = new Map();
   document.querySelectorAll(".folder").forEach(folder => {
     const button = folder.querySelector(".folder-toggle");
     const description = folder.querySelector(".folder-desc");
-    let pinned = false, hovered = false, focused = false, dismissed = false;
+    let pinned = false, hovered = false, focused = false, dismissed = false, inZone = false, hideTimer;
     const render = () => {
-      const open = pinned || (!dismissed && desktopHover.matches && (hovered || focused));
+      const open = reduceMotion.matches || pinned ||
+        (!dismissed && (inZone || (desktopHover.matches && (hovered || focused))));
+      if (open === folder.classList.contains("is-open") && description.hidden === !open) return;
       button.setAttribute("aria-expanded", String(open));
-      description.hidden = !open;
-      folder.classList.toggle("is-open", open);
+      clearTimeout(hideTimer);
+      if (open) {
+        // Unhide first, then open on the next frame so the height can animate
+        description.hidden = false;
+        requestAnimationFrame(() => requestAnimationFrame(() => folder.classList.add("is-open")));
+      } else {
+        folder.classList.remove("is-open");
+        // Hide from assistive tech only after the closing animation has finished
+        hideTimer = setTimeout(() => { if (!folder.classList.contains("is-open")) description.hidden = true; }, 480);
+      }
     };
+    zoneFolders.set(folder, value => { inZone = value; if (!value) dismissed = false; render(); });
     button.addEventListener("click", () => {
       const wasOpen = button.getAttribute("aria-expanded") === "true";
       pinned = !wasOpen;
@@ -76,9 +99,12 @@
       if (event.key === "Escape") { pinned = false; dismissed = true; render(); }
     });
     resetFolders.push(() => { hovered = false; focused = folder.contains(document.activeElement); render(); });
+    description.hidden = true;
     render();
   });
   document.documentElement.classList.add("enhanced");
+  // Files open as they reach the middle of the screen and close once scrolled past
+  watchZone(Array.from(zoneFolders.keys()), (folder, inside) => zoneFolders.get(folder)(inside));
 
   // Reserve the tallest expanded height on desktop; opening never moves adjacent content.
   function measureFolders() {
@@ -98,10 +124,7 @@
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
     folders.classList.add("is-filing");
     const filing = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        folders.classList.remove("is-filing");
-        filing.disconnect();
-      }
+      entries.forEach(entry => folders.classList.toggle("is-filing", !entry.isIntersecting));
     }, { threshold: 0, rootMargin: "0px 0px -60px 0px" });
     filing.observe(folders);
     reduceMotion.addEventListener("change", () => {
@@ -210,8 +233,8 @@
   });
   new ResizeObserver(sizeModal).observe(viewport);
 
-  // Pain points: desktop reveals on hover/focus (CSS). Touch layouts open each card
-  // as it passes through the middle of the screen. Cards stay open once read.
+  // Pain points: each card opens as it passes through the middle of the screen and
+  // closes again once scrolled past. Desktop hover/focus also opens it (CSS).
   const painGrid = document.querySelector(".pain-grid");
   const painCards = painGrid ? painGrid.querySelectorAll(".pain-card") : [];
   function measurePain() {
@@ -227,46 +250,53 @@
     new ResizeObserver(measurePain).observe(painGrid);
     desktopHover.addEventListener("change", measurePain);
     document.fonts.ready.then(measurePain);
-    if ("IntersectionObserver" in window) {
-      const readZone = new IntersectionObserver(entries => {
-        if (desktopHover.matches) return;
-        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add("is-open"); });
-      }, { rootMargin: "-38% 0px -38% 0px", threshold: 0 });
-      painCards.forEach(card => readZone.observe(card));
+    if (canObserve) {
+      watchZone(painCards, (card, inside) => card.classList.toggle("is-open", inside));
     } else {
       painCards.forEach(card => card.classList.add("is-open"));
     }
   }
 
-  // How It Works: the timeline draws once from step 1 to step 4.
+  // How It Works: the timeline draws from step 1 to step 4 each time the section comes into view.
   const steps = document.querySelector(".steps");
   if (steps && !reduceMotion.matches && "IntersectionObserver" in window) {
     steps.classList.add("is-pending");
     const draw = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        steps.classList.add("is-drawn");
-        requestAnimationFrame(() => steps.classList.remove("is-pending"));
-        draw.disconnect();
-      }
-    }, { threshold: 0.35 });
+      entries.forEach(entry => {
+        if (entry.intersectionRatio >= 0.35) {
+          steps.classList.add("is-drawn");
+          requestAnimationFrame(() => steps.classList.remove("is-pending"));
+        } else if (!entry.isIntersecting) {
+          steps.classList.remove("is-drawn");
+          steps.classList.add("is-pending");
+        }
+      });
+    }, { threshold: [0, 0.35] });
     draw.observe(steps);
   }
 
-  // Gentle one-time entrances. Content is only held back while JS and motion are available.
+  // Gentle entrances that replay each time a block returns to view.
+  // Content is only held back while JS and motion are available.
   const reveals = document.querySelectorAll("[data-reveal]");
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
     reveals.forEach(el => el.classList.add("is-pending"));
     const reveal = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.remove("is-pending");
-        reveal.unobserve(entry.target);
+        if (entry.intersectionRatio >= 0.12) entry.target.classList.remove("is-pending");
+        else if (!entry.isIntersecting) entry.target.classList.add("is-pending");
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+    }, { threshold: [0, 0.12] });
     reveals.forEach(el => reveal.observe(el));
     reduceMotion.addEventListener("change", () => {
       if (reduceMotion.matches) reveals.forEach(el => el.classList.remove("is-pending"));
     });
+  }
+
+  // When Stronger Systems Make the Difference: tags turn lavender together, and each
+  // checklist row lifts as it crosses the middle of the screen. Both revert once past.
+  if (!reduceMotion.matches) {
+    watchZone(document.querySelectorAll(".tags"), (list, inside) => list.classList.toggle("is-active", inside));
+    watchZone(document.querySelectorAll(".check-list li"), (row, inside) => row.classList.toggle("is-active", inside), "-40% 0px -40% 0px");
   }
 
   // Final CTA: a slow ambient ripple only while the section is on screen.
