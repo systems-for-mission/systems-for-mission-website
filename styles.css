@@ -80,7 +80,8 @@
   --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   --t-fast: 160ms;
   --t-mid: 220ms;
-  --t-reveal: 420ms;   /* calmer reveals for cards and folders */
+  --t-reveal: 750ms;   /* slow, calm reveals for cards and folders */
+  --ease-reveal: cubic-bezier(0.25, 0.1, 0.25, 1); /* standard ease */
 
   --header-h: 72px;
 }
@@ -610,7 +611,7 @@ strong { font-weight: 600; }
 .enhanced .pain-desc {
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows var(--t-reveal) var(--ease), opacity var(--t-reveal) ease;
+  transition: grid-template-rows var(--t-reveal) var(--ease-reveal), opacity var(--t-reveal) ease;
 }
 .enhanced .pain-card.is-open .pain-desc { grid-template-rows: 1fr; opacity: 1; }
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
@@ -756,7 +757,7 @@ strong { font-weight: 600; }
 .enhanced .folder-desc {
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows var(--t-reveal) var(--ease), opacity var(--t-reveal) ease;
+  transition: grid-template-rows var(--t-reveal) var(--ease-reveal), opacity var(--t-reveal) ease;
 }
 
 /* Open state: tapped / clicked / toggled by keyboard */
@@ -812,15 +813,8 @@ strong { font-weight: 600; }
     height: var(--folder-h, auto);
     min-height: 13.5rem;
   }
-  .enhanced .folder-content { margin-top: auto; }
-  /* The icon steps aside when the description opens, so the folders can stay compact */
-  .enhanced .folder-front > .icon-box {
-    position: absolute;
-    top: 22px;
-    left: 22px;
-    transition: opacity var(--t-reveal) ease, scale var(--t-reveal) var(--ease);
-  }
-  .enhanced .folder.is-open .folder-front > .icon-box { opacity: 0; scale: 0.85; }
+  /* Icon, then title, then description, all top-aligned so every title starts on the same line */
+  .enhanced .folder-content { margin-top: 0; }
   .folders.no-anim .folder-desc,
   .folders.no-anim .icon-box { transition: none !important; }
   .folders.is-measuring .folder-front { height: auto; min-height: 0; }
@@ -871,7 +865,7 @@ strong { font-weight: 600; }
   border-radius: 4px;
   border: 2px solid var(--lavender);
   background: var(--lavender);
-  transition: background-color 300ms ease;
+  transition: background-color 700ms ease;
 }
 /* Timeline draws once when the section enters view (script.js adds .is-pending, then .is-drawn).
    Text stays readable throughout; only the line, nodes, numbers and a small settle animate. */
@@ -880,14 +874,14 @@ strong { font-weight: 600; }
 .steps.is-pending .step-num { opacity: 0.4; }
 .steps.is-pending .step-head,
 .steps.is-pending .step .card-title { translate: 0 6px; }
-.steps::after { transition: transform 1200ms cubic-bezier(0.45, 0, 0.25, 1); }
-.step-num { transition: opacity 360ms ease; }
+.steps::after { transition: transform 2400ms var(--ease-reveal); }
+.step-num { transition: opacity 700ms ease; }
 .step-head,
-.step .card-title { transition: translate 360ms var(--ease); }
+.step .card-title { transition: translate 700ms var(--ease-reveal); }
 .steps.is-drawn .step-node,
 .steps.is-drawn .step-num,
 .steps.is-drawn .step-head,
-.steps.is-drawn .step .card-title { transition-delay: calc(var(--step) * 300ms + 120ms); }
+.steps.is-drawn .step .card-title { transition-delay: calc(var(--step) * 600ms + 200ms); }
 .step:nth-child(1) { --step: 0; }
 .step:nth-child(2) { --step: 1; }
 .step:nth-child(3) { --step: 2; }
@@ -1167,16 +1161,16 @@ strong { font-weight: 600; }
   font-weight: 600;
   line-height: 1.4;
   cursor: default;
-  transition: background-color var(--t-mid) ease, translate var(--t-mid) var(--ease);
+  transition: background-color 700ms var(--ease-reveal), translate 700ms var(--ease-reveal);
 }
 @media (hover: hover) and (pointer: fine) {
   .tags li:hover { translate: 0 -2px; background: var(--lavender); }
 }
 .tags.is-active li { translate: 0 -2px; background: var(--lavender); }
-.tags li:nth-child(2) { transition-delay: 70ms; }
-.tags li:nth-child(3) { transition-delay: 140ms; }
-.tags li:nth-child(4) { transition-delay: 210ms; }
-.tags li:nth-child(5) { transition-delay: 280ms; }
+.tags li:nth-child(2) { transition-delay: 150ms; }
+.tags li:nth-child(3) { transition-delay: 300ms; }
+.tags li:nth-child(4) { transition-delay: 450ms; }
+.tags li:nth-child(5) { transition-delay: 600ms; }
 
 .audience-list {
   padding: clamp(20px, 3vw, 32px);
@@ -1199,7 +1193,7 @@ strong { font-weight: 600; }
   border-bottom: 1px solid var(--line);
 }
 .check-list li:last-child { border-bottom: 0; padding-bottom: 0; }
-.check-list li { transition: translate var(--t-mid) var(--ease); }
+.check-list li { transition: translate 700ms var(--ease-reveal); }
 @media (hover: hover) and (pointer: fine) {
   .check-list li:hover { translate: 0 -2px; }
   .check-list li:hover .icon-check { background: var(--lavender); }
@@ -1215,7 +1209,7 @@ strong { font-weight: 600; }
   background: var(--citron);
   color: var(--ink);
   stroke-width: 3;
-  transition: background-color var(--t-mid) ease;
+  transition: background-color 700ms var(--ease-reveal);
 }
 
 @media (min-width: 960px) {
@@ -1320,7 +1314,7 @@ strong { font-weight: 600; }
 
 /* ---------- 19. Filing motion: services only, never hide content ---------- */
 @media (prefers-reduced-motion: no-preference) {
-  .enhanced .folder { transition: transform 420ms var(--ease), translate var(--t-mid) var(--ease); }
+  .enhanced .folder { transition: transform 900ms var(--ease-reveal), translate var(--t-reveal) var(--ease-reveal); }
   .enhanced .folders.is-filing .folder { transform: translateY(10px) rotate(-0.5deg); }
   .enhanced .folders.is-filing .folder:nth-child(even) { transform: translateY(10px) rotate(0.5deg); }
 }
@@ -1328,19 +1322,19 @@ strong { font-weight: 600; }
 /* Gentle one-time entrance for selected blocks (script.js adds .is-pending, then removes it) */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal] {
-    transition: opacity 560ms ease, translate 560ms var(--ease);
-    transition-delay: calc(var(--d, 0) * 110ms);
+    transition: opacity 1000ms var(--ease-reveal), translate 1000ms var(--ease-reveal);
+    transition-delay: calc(var(--d, 0) * 180ms);
   }
-  [data-reveal].is-pending { opacity: 0; translate: 0 14px; }
+  [data-reveal].is-pending { opacity: 0; translate: 0 18px; }
   /* Elements with their own hover transitions keep them alongside the entrance */
   .btn[data-reveal] {
-    transition: opacity 560ms ease calc(var(--d, 0) * 110ms), translate 560ms var(--ease) calc(var(--d, 0) * 110ms),
+    transition: opacity 1000ms var(--ease-reveal) calc(var(--d, 0) * 180ms), translate 1000ms var(--ease-reveal) calc(var(--d, 0) * 180ms),
       background-color var(--t-fast) ease, border-color var(--t-fast) ease, box-shadow var(--t-mid) ease;
   }
   .quote-card[data-reveal] {
-    transition: opacity 560ms ease, translate 560ms var(--ease), box-shadow var(--t-mid) ease;
+    transition: opacity 1000ms var(--ease-reveal), translate 1000ms var(--ease-reveal), box-shadow var(--t-mid) ease;
   }
-  .quote-card[data-reveal]:not(.is-pending):hover { transition-duration: 560ms, var(--t-mid), var(--t-mid); }
+  .quote-card[data-reveal]:not(.is-pending):hover { transition-duration: 1000ms, 400ms, 400ms; }
 }
 
 /* ---------- 20. Reduced motion ---------- */

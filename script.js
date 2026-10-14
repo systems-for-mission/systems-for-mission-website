@@ -35,20 +35,35 @@
     }
   });
   document.addEventListener("click", event => { if (!header.contains(event.target)) setMenu(false); });
-  header.addEventListener("focusout", event => { if (!header.contains(event.relatedTarget)) setMenu(false); });
+  // iOS Safari drops focus from the menu before it delivers a tap on a link. Closing on
+  // that focusout hid the link mid-tap, so menu links never fired. Ignore focus changes
+  // while a pointer is pressed inside the header, and let the click itself close the menu.
+  let pointerInHeader = false;
+  header.addEventListener("pointerdown", () => { pointerInHeader = true; });
+  document.addEventListener("pointerup", () => { setTimeout(() => { pointerInHeader = false; }, 400); }, true);
+  header.addEventListener("focusout", event => {
+    if (pointerInHeader) return;
+    if (!header.contains(event.relatedTarget)) setMenu(false);
+  });
   desktopNav.addEventListener("change", () => {
     if (!desktopNav.matches && nav.contains(document.activeElement)) toggle.focus();
     setMenu(false);
   });
 
-  // Reading zone: the middle band of the screen. Elements open as they enter it
-  // and close again once scrolled past, in either direction.
+  // Reading zone: the middle band of the screen. Elements open the first time they
+  // reach it and then stay open.
   const canObserve = "IntersectionObserver" in window;
-  const watchZone = (elements, onChange, band = "-30% 0px -30% 0px") => {
+  // The observed area reaches far above the screen, so anything already scrolled
+  // past (even during a fast flick) also counts as seen.
+  const watchZone = (elements, onEnter, line = "-30%") => {
     if (!canObserve) return;
     const zone = new IntersectionObserver(entries => {
-      entries.forEach(entry => onChange(entry.target, entry.isIntersecting));
-    }, { rootMargin: band, threshold: 0 });
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        onEnter(entry.target);
+        zone.unobserve(entry.target);
+      });
+    }, { rootMargin: `100000px 0px ${line} 0px`, threshold: 0 });
     elements.forEach(el => zone.observe(el));
   };
 
@@ -76,7 +91,7 @@
         hideTimer = setTimeout(() => { if (!folder.classList.contains("is-open")) description.hidden = true; }, 480);
       }
     };
-    zoneFolders.set(folder, value => { inZone = value; if (!value) dismissed = false; render(); });
+    zoneFolders.set(folder, () => { inZone = true; render(); });
     button.addEventListener("click", () => {
       const wasOpen = button.getAttribute("aria-expanded") === "true";
       pinned = !wasOpen;
@@ -103,8 +118,8 @@
     render();
   });
   document.documentElement.classList.add("enhanced");
-  // Files open as they reach the middle of the screen and close once scrolled past
-  watchZone(Array.from(zoneFolders.keys()), (folder, inside) => zoneFolders.get(folder)(inside));
+  // Files open as they reach the middle of the screen, then stay open
+  watchZone(Array.from(zoneFolders.keys()), folder => zoneFolders.get(folder)());
 
   // Reserve the tallest expanded height on desktop; opening never moves adjacent content.
   function measureFolders() {
@@ -124,7 +139,10 @@
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
     folders.classList.add("is-filing");
     const filing = new IntersectionObserver(entries => {
-      entries.forEach(entry => folders.classList.toggle("is-filing", !entry.isIntersecting));
+      if (entries.some(entry => entry.isIntersecting)) {
+        folders.classList.remove("is-filing");
+        filing.disconnect();
+      }
     }, { threshold: 0, rootMargin: "0px 0px -60px 0px" });
     filing.observe(folders);
     reduceMotion.addEventListener("change", () => {
@@ -233,8 +251,8 @@
   });
   new ResizeObserver(sizeModal).observe(viewport);
 
-  // Pain points: each card opens as it passes through the middle of the screen and
-  // closes again once scrolled past. Desktop hover/focus also opens it (CSS).
+  // Pain points: each card opens as it reaches the middle of the screen, then stays open.
+  // Desktop hover/focus also opens it (CSS).
   const painGrid = document.querySelector(".pain-grid");
   const painCards = painGrid ? painGrid.querySelectorAll(".pain-card") : [];
   function measurePain() {
@@ -251,52 +269,48 @@
     desktopHover.addEventListener("change", measurePain);
     document.fonts.ready.then(measurePain);
     if (canObserve) {
-      watchZone(painCards, (card, inside) => card.classList.toggle("is-open", inside));
+      watchZone(painCards, card => card.classList.add("is-open"));
     } else {
       painCards.forEach(card => card.classList.add("is-open"));
     }
   }
 
-  // How It Works: the timeline draws from step 1 to step 4 each time the section comes into view.
+  // How It Works: the timeline draws once from step 1 to step 4.
   const steps = document.querySelector(".steps");
   if (steps && !reduceMotion.matches && "IntersectionObserver" in window) {
     steps.classList.add("is-pending");
     const draw = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.intersectionRatio >= 0.35) {
-          steps.classList.add("is-drawn");
-          requestAnimationFrame(() => steps.classList.remove("is-pending"));
-        } else if (!entry.isIntersecting) {
-          steps.classList.remove("is-drawn");
-          steps.classList.add("is-pending");
-        }
-      });
-    }, { threshold: [0, 0.35] });
+      if (entries.some(entry => entry.isIntersecting)) {
+        steps.classList.add("is-drawn");
+        requestAnimationFrame(() => steps.classList.remove("is-pending"));
+        draw.disconnect();
+      }
+    }, { threshold: 0.35 });
     draw.observe(steps);
   }
 
-  // Gentle entrances that replay each time a block returns to view.
-  // Content is only held back while JS and motion are available.
+  // Gentle one-time entrances. Content is only held back while JS and motion are available.
   const reveals = document.querySelectorAll("[data-reveal]");
   if (!reduceMotion.matches && "IntersectionObserver" in window) {
     reveals.forEach(el => el.classList.add("is-pending"));
     const reveal = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.intersectionRatio >= 0.12) entry.target.classList.remove("is-pending");
-        else if (!entry.isIntersecting) entry.target.classList.add("is-pending");
+        if (!entry.isIntersecting) return;
+        entry.target.classList.remove("is-pending");
+        reveal.unobserve(entry.target);
       });
-    }, { threshold: [0, 0.12] });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
     reveals.forEach(el => reveal.observe(el));
     reduceMotion.addEventListener("change", () => {
       if (reduceMotion.matches) reveals.forEach(el => el.classList.remove("is-pending"));
     });
   }
 
-  // When Stronger Systems Make the Difference: tags turn lavender together, and each
-  // checklist row lifts as it crosses the middle of the screen. Both revert once past.
+  // When Stronger Systems Make the Difference: tags turn lavender in sequence, and each
+  // checklist row lifts as it reaches the middle of the screen. Both then stay that way.
   if (!reduceMotion.matches) {
-    watchZone(document.querySelectorAll(".tags"), (list, inside) => list.classList.toggle("is-active", inside));
-    watchZone(document.querySelectorAll(".check-list li"), (row, inside) => row.classList.toggle("is-active", inside), "-40% 0px -40% 0px");
+    watchZone(document.querySelectorAll(".tags"), list => list.classList.add("is-active"));
+    watchZone(document.querySelectorAll(".check-list li"), row => row.classList.add("is-active"), "-40%");
   }
 
   // Final CTA: a slow ambient ripple only while the section is on screen.
