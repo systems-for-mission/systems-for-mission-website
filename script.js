@@ -176,7 +176,9 @@
         entry.target.classList.remove("is-pending");
         reveal.unobserve(entry.target);
       });
-    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.12 });
+    // The observed area reaches far above the screen, so anything already scrolled past
+    // (a fast flick, or a jump from the menu) also counts as seen and never stays hidden.
+    }, { rootMargin: "100000px 0px -8% 0px", threshold: 0 });
     reveals.forEach(el => reveal.observe(el));
     reduceMotion.addEventListener("change", () => {
       if (reduceMotion.matches) reveals.forEach(el => el.classList.remove("is-pending"));
