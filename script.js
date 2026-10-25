@@ -1,8 +1,7 @@
-/* Systems for Mission: progressive navigation, folders and local HTML previews. */
+/* Systems for Mission: progressive navigation, local HTML previews and a few gentle one-time reveals. */
 (() => {
   "use strict";
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
-  const desktopHover = matchMedia("(min-width: 1024px) and (hover: hover) and (pointer: fine)");
   const header = document.querySelector(".site-header");
   const toggle = document.querySelector(".menu-toggle");
   const nav = document.querySelector(".site-nav");
@@ -50,105 +49,7 @@
     setMenu(false);
   });
 
-  // Reading zone: the middle band of the screen. Elements open the first time they
-  // reach it and then stay open.
-  const canObserve = "IntersectionObserver" in window;
-  // The observed area reaches far above the screen, so anything already scrolled
-  // past (even during a fast flick) also counts as seen.
-  const watchZone = (elements, onEnter, line = "-30%") => {
-    if (!canObserve) return;
-    const zone = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (!entry.isIntersecting) return;
-        onEnter(entry.target);
-        zone.unobserve(entry.target);
-      });
-    }, { rootMargin: `100000px 0px ${line} 0px`, threshold: 0 });
-    elements.forEach(el => zone.observe(el));
-  };
-
-  const folders = document.querySelector(".folders");
-  const resetFolders = [];
-  const closeFolders = [];
-  const zoneFolders = new Map();
-  document.querySelectorAll(".folder").forEach(folder => {
-    const button = folder.querySelector(".folder-toggle");
-    const description = folder.querySelector(".folder-desc");
-    let pinned = false, hovered = false, focused = false, dismissed = false, inZone = false, hideTimer;
-    const render = () => {
-      const open = reduceMotion.matches || pinned ||
-        (!dismissed && (inZone || (desktopHover.matches && (hovered || focused))));
-      if (open === folder.classList.contains("is-open") && description.hidden === !open) return;
-      button.setAttribute("aria-expanded", String(open));
-      clearTimeout(hideTimer);
-      if (open) {
-        // Unhide first, then open on the next frame so the height can animate
-        description.hidden = false;
-        requestAnimationFrame(() => requestAnimationFrame(() => folder.classList.add("is-open")));
-      } else {
-        folder.classList.remove("is-open");
-        // Hide from assistive tech only after the closing animation has finished
-        hideTimer = setTimeout(() => { if (!folder.classList.contains("is-open")) description.hidden = true; }, 480);
-      }
-    };
-    zoneFolders.set(folder, () => { inZone = true; render(); });
-    button.addEventListener("click", () => {
-      const wasOpen = button.getAttribute("aria-expanded") === "true";
-      pinned = !wasOpen;
-      dismissed = wasOpen;
-      // Touch layouts: one open folder at a time keeps the list light
-      if (pinned && !desktopHover.matches) closeFolders.forEach(close => close(folder));
-      render();
-    });
-    closeFolders.push(except => { if (except !== folder && pinned) { pinned = false; render(); } });
-    folder.addEventListener("pointerenter", event => {
-      if (event.pointerType === "touch") return;
-      hovered = true; dismissed = false; render();
-    });
-    folder.addEventListener("pointerleave", () => { hovered = false; render(); });
-    folder.addEventListener("focusin", () => { focused = true; dismissed = false; render(); });
-    folder.addEventListener("focusout", event => {
-      if (!folder.contains(event.relatedTarget)) { focused = false; dismissed = false; render(); }
-    });
-    folder.addEventListener("keydown", event => {
-      if (event.key === "Escape") { pinned = false; dismissed = true; render(); }
-    });
-    resetFolders.push(() => { hovered = false; focused = folder.contains(document.activeElement); render(); });
-    description.hidden = true;
-    render();
-  });
   document.documentElement.classList.add("enhanced");
-  // Files open as they reach the middle of the screen, then stay open
-  watchZone(Array.from(zoneFolders.keys()), folder => zoneFolders.get(folder)());
-
-  // Reserve the tallest expanded height on desktop; opening never moves adjacent content.
-  function measureFolders() {
-    folders.style.removeProperty("--folder-h");
-    if (!desktopHover.matches) return;
-    folders.classList.add("is-measuring");
-    const height = Math.max(...Array.from(folders.querySelectorAll(".folder-front"), item => item.offsetHeight));
-    folders.classList.remove("is-measuring");
-    folders.style.setProperty("--folder-h", `${height}px`);
-  }
-  new ResizeObserver(measureFolders).observe(folders);
-  desktopHover.addEventListener("change", () => { resetFolders.forEach(reset => reset()); measureFolders(); });
-  document.fonts.ready.then(measureFolders);
-  measureFolders();
-
-  // A short, one-time alignment movement. Content and logos remain fully opaque.
-  if (!reduceMotion.matches && "IntersectionObserver" in window) {
-    folders.classList.add("is-filing");
-    const filing = new IntersectionObserver(entries => {
-      if (entries.some(entry => entry.isIntersecting)) {
-        folders.classList.remove("is-filing");
-        filing.disconnect();
-      }
-    }, { threshold: 0, rootMargin: "0px 0px -60px 0px" });
-    filing.observe(folders);
-    reduceMotion.addEventListener("change", () => {
-      if (reduceMotion.matches) { folders.classList.remove("is-filing"); filing.disconnect(); }
-    });
-  }
 
   // The local exports have fixed table columns. Measure their real content, never a crop.
   const dimensions = document => {
@@ -222,7 +123,7 @@
       fitButton.setAttribute("aria-pressed", "false");
       dialog.querySelector("#preview-title").textContent = link.dataset.title;
       dialog.querySelector(".preview-direct").href = link.href;
-      frame.title = `${link.dataset.title} — full preview`;
+      frame.title = `${link.dataset.title}: full preview`;
       frame.src = link.href;
       sizeModal();
       document.body.classList.add("preview-is-open");
@@ -250,30 +151,6 @@
     opener?.focus({ preventScroll: true });
   });
   new ResizeObserver(sizeModal).observe(viewport);
-
-  // Pain points: each card opens as it reaches the middle of the screen, then stays open.
-  // Desktop hover/focus also opens it (CSS).
-  const painGrid = document.querySelector(".pain-grid");
-  const painCards = painGrid ? painGrid.querySelectorAll(".pain-card") : [];
-  function measurePain() {
-    if (!painGrid) return;
-    painGrid.style.removeProperty("--pain-h");
-    if (!desktopHover.matches) return;
-    painGrid.classList.add("is-measuring");
-    const tallest = Math.max(...Array.from(painCards, card => card.offsetHeight));
-    painGrid.classList.remove("is-measuring");
-    painGrid.style.setProperty("--pain-h", `${tallest}px`);
-  }
-  if (painGrid) {
-    new ResizeObserver(measurePain).observe(painGrid);
-    desktopHover.addEventListener("change", measurePain);
-    document.fonts.ready.then(measurePain);
-    if (canObserve) {
-      watchZone(painCards, card => card.classList.add("is-open"));
-    } else {
-      painCards.forEach(card => card.classList.add("is-open"));
-    }
-  }
 
   // How It Works: the timeline draws once from step 1 to step 4.
   const steps = document.querySelector(".steps");
@@ -306,13 +183,6 @@
     });
   }
 
-  // When Stronger Systems Make the Difference: tags turn lavender in sequence, and each
-  // checklist row lifts as it reaches the middle of the screen. Both then stay that way.
-  if (!reduceMotion.matches) {
-    watchZone(document.querySelectorAll(".tags"), list => list.classList.add("is-active"));
-    watchZone(document.querySelectorAll(".check-list li"), row => row.classList.add("is-active"), "-40%");
-  }
-
   // Final CTA: a slow ambient ripple only while the section is on screen.
   const ambient = document.querySelector(".btn-ambient");
   if (ambient && "IntersectionObserver" in window) {
@@ -333,6 +203,13 @@
     };
     new ResizeObserver(fitSite).observe(siteFrame);
     fitSite();
+  });
+
+  // About photos: if an image file is missing, its figure steps aside cleanly.
+  document.querySelectorAll(".about-photo img").forEach(img => {
+    const hide = () => img.closest(".about-photo").classList.add("is-missing");
+    if (img.complete && img.naturalWidth === 0) hide();
+    img.addEventListener("error", hide);
   });
 
   document.querySelector("[data-year]").textContent = String(new Date().getFullYear());
