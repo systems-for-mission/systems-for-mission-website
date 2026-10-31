@@ -947,40 +947,60 @@ strong { font-weight: 600; }
 }
 
 
-/* ---------- 15. Testimonial: an editorial quote, no card ---------- */
+/* ---------- 15. Testimonials: three editorial quotes, no cards ---------- */
 .testimonials-section { background: var(--lavender-tint); }
 
-.testimonials { display: grid; gap: var(--s-6); }
-.quote { display: grid; gap: var(--s-4); }
-.quote + .quote { padding-top: var(--s-6); border-top: 1px solid var(--line-strong); }
+/* Phones and tablets: stacked, separated by a thin rule */
+.testimonials { display: grid; gap: var(--s-5); }
+.quote {
+  display: grid;
+  grid-template-rows: 1fr auto; /* attributions line up along the bottom */
+  gap: var(--s-4);
+  margin: 0;
+}
+.quote + .quote { padding-top: var(--s-5); border-top: 1px solid var(--line-strong); }
 
 .quote blockquote p {
   max-width: 32em;
   font-family: var(--font-quote);
-  font-size: clamp(1.375rem, 1.1rem + 1.1vw, 2.125rem);
+  font-size: clamp(1.1875rem, 1.05rem + 0.45vw, 1.375rem);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.55;
   text-indent: -0.42em; /* hangs the opening quotation mark in the margin */
+}
+/* The measurable result gets a soft Citron underline */
+.quote-stat {
+  padding-inline: 1px;
+  background: linear-gradient(to top, var(--citron) 0 0.22em, transparent 0.22em);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 .quote figcaption {
   display: grid;
   gap: 2px;
   padding-top: var(--s-3);
   border-top: 1px solid var(--line-strong);
-  max-width: 24em;
-  font-size: 1rem;
+  font-size: 0.9375rem;
   line-height: 1.4;
 }
+.quote figcaption strong { font-weight: 700; }
 .quote figcaption span { color: var(--pine); }
 
-@media (min-width: 900px) {
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
-    gap: var(--s-7);
-    align-items: start;
+/* Desktop: three equal columns divided by thin vertical rules */
+@media (min-width: 1024px) {
+  .testimonials {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: 1fr auto;
+    gap: 0;
   }
-  .testimonials-grid .section-head { margin-bottom: 0; }
+  /* Quotes and attributions share rows across all three columns, so the names line up */
+  @supports (grid-template-rows: subgrid) {
+    .quote { grid-row: span 2; grid-template-rows: subgrid; row-gap: var(--s-4); }
+  }
+  .quote { padding-inline: var(--s-5); }
+  .quote:first-child { padding-left: 0; }
+  .quote:last-child { padding-right: 0; }
+  .quote + .quote { padding-top: 0; border-top: 0; border-left: 1px solid var(--line-strong); }
 }
 
 /* ---------- 16. Who it's for ---------- */
